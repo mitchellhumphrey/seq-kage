@@ -38,18 +38,29 @@ sg.change_look_and_feel('Default')
 
 #===============================grabbing root folder, will not proceed until you have a path selected=================================
 
-root_folder = ''
-while(root_folder==''):
+root_folder = '@'
+while(root_folder=='@'or root_folder==''):
     root_folder = sg.PopupGetFolder('FPK unpacked root filepath', 'Please select the unpacked root FPK filepath')
-    if(root_folder==''):
+    if(root_folder=='@'or root_folder==''):
         sg.Popup("That's an empty file >_>")
+    print(root_folder)
 
 #=====================building layout and window for character selection, since this will not change is it outside of main program loop =========
 radio_table = []
-for x in char_table:
-    radio_table.append(sg.Radio(x.name,'sel'))
+radio_table2=[]
+radio_table3=[]
+radio_table4=[]
+for x in range(len(char_table)):
+    if(x<10):
+        radio_table.append(sg.Radio(char_table[x].name,'sel'))
+    elif(x<20):
+        radio_table2.append(sg.Radio(char_table[x].name,'sel'))
+    elif(x<28):
+        radio_table3.append(sg.Radio(char_table[x].name,'sel'))
+    else:
+        radio_table4.append(sg.Radio(char_table[x].name,'sel'))
 
-radio_layout = [[sg.Text('Select the Character you wish to edit')]]+[radio_table]+[[sg.Button('Select'),sg.Button('Quit')]]
+radio_layout = [[sg.Text('Select the Character you wish to edit')]]+[radio_table,radio_table2,radio_table3,radio_table4]+[[sg.Button('Select'),sg.Button('Quit')]]
 
 window_radio = sg.Window('Character Select',radio_layout)
 
@@ -92,7 +103,7 @@ while True:
                     
             elif event2 in (None,"Quit"):
                 if(sg.PopupYesNo('Would you like to quit?')=='Yes'):
-                    break
+                    quit()
                         
                     
         except TypeError:
