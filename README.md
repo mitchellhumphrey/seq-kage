@@ -1,4 +1,4 @@
-SEQ EDITOR
+SEQ KAGE
 
 source code requires PYSimpleGUI
 
