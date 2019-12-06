@@ -3,6 +3,38 @@ import PySimpleGUI as sg
 import os
 import shutil
 
+def Char_Index_select(list_of_chars,window):
+    counter = 0
+    while True:
+        
+        event, values = window.read()
+        try:
+            if event in (None,'Select'):
+                print('should be going forward')
+                counter+=1
+                print(values)
+                if(counter>10):
+                    sg.Popup('Ight imma head out')
+                    quit()
+                print(len(char_table))
+                for x in range(len(char_table)):
+                    
+                    if(values[x]==True):
+                        index = x
+                        #window.close()
+                        return index
+                        
+                             
+                    
+            elif event in (None,"Quit"):
+                if(sg.PopupYesNo('Would you like to quit?')=='Yes'):
+                    quit()
+                        
+                    
+        except TypeError:
+            pass
+                
+
 
 def Edit_file(filepath,offset,value):
     "offset is hex value<--------------------"
@@ -47,7 +79,7 @@ while(root_folder=='@'or root_folder==''):
     print(root_folder)
 
 #=====================building layout and window for character selection, since this will not change is it outside of main program loop =========
-radio_table = []
+radio_table =[]
 radio_table2=[]
 radio_table3=[]
 radio_table4=[]
@@ -60,15 +92,20 @@ for x in range(len(char_table)):
         radio_table3.append(sg.Radio(char_table[x].name,'sel'))
     else:
         radio_table4.append(sg.Radio(char_table[x].name,'sel'))
+final_radio_table = [radio_table,radio_table2,radio_table3,radio_table4]
 
-radio_layout = [[sg.Text('Select the Character you wish to edit')]]+[radio_table,radio_table2,radio_table3,radio_table4]+[[sg.Button('Select'),sg.Button('Quit')]]
+radio_layout = [[sg.Text('Select the Character you wish to edit')]]+final_radio_table+[[sg.Button('Select'),sg.Button('Quit')]]
 
 window_radio = sg.Window('Character Select',radio_layout)
 
 #==============================main program loop============================================================
 break_flag = False
+
+
+
 while True:
-    counter = 0
+    index = Char_Index_select(char_table,window_radio)
+    '''counter = 0
     while True:
         #if(stop == True):
         #    break
@@ -91,16 +128,8 @@ while True:
                         break
                 if break_flag:
                     break
-                '''
-                if(values2[0]==True):
-                    Character = naruto
-                        
-                    break
-                elif(values2[1]==True):
-                    Character = neji
-                        
-                    break'''
                 
+                              
                     
             elif event2 in (None,"Quit"):
                 if(sg.PopupYesNo('Would you like to quit?')=='Yes'):
@@ -108,7 +137,7 @@ while True:
                         
                     
         except TypeError:
-            pass
+            pass'''
                 
             
             
