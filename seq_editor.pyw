@@ -43,6 +43,7 @@ while(root_folder=='@'or root_folder==''):
     root_folder = sg.PopupGetFolder('FPK unpacked root filepath', 'Please select the unpacked root FPK filepath')
     if(root_folder=='@'or root_folder==''):
         sg.Popup("That's an empty file >_>")
+        quit()
     print(root_folder)
 
 #=====================building layout and window for character selection, since this will not change is it outside of main program loop =========
