@@ -2,6 +2,32 @@ from characters import *
 import PySimpleGUI as sg
 import os
 import shutil
+import random
+
+quips = ["Ahh yes, it's all coming together","Everything's coming up Millhouse"]
+
+
+def Editor(window,index):
+    while True:
+        event, values = window.read()
+        if event in (None, 'Go Back'):        # if user closes window or clicks cancel
+            if(sg.PopupYesNo('Would you like to go back?')=='Yes'):
+                window.close()
+                return
+                
+                
+        else:  
+            try:
+                int(values[0])
+                int(values[0])
+                Edit_file(root_folder+char_table[index].seq_path,char_table[index].health_offset,int(values[0]))
+                Edit_file(root_folder+char_table[index].seq_path,char_table[index].guard_offset,int(values[1]))
+                window.close()
+                return
+                    
+                        
+            except ValueError:
+                sg.Popup("you didn't just type numbers you silly goose")
 
 def Char_Index_select(list_of_chars,window):
     counter = 0
@@ -104,85 +130,31 @@ break_flag = False
 
 
 while True:
+    
     index = Char_Index_select(char_table,window_radio)
-    '''counter = 0
-    while True:
-        #if(stop == True):
-        #    break
-        
-        event2, values2 = window_radio.read()
-        try:
-            if event2 in (None,'Select'):
-                print('should be going forward')
-                counter+=1
-                print(values2)
-                if(counter>10):
-                    sg.Popup('Ight imma head out')
-                    quit()
-                print(len(char_table))
-                for x in range(len(char_table)):
-                    print('x is ',x)
-                    if(values2[x]==True):
-                        index = x
-                        break_flag = True
-                        break
-                if break_flag:
-                    break
-                
-                              
                     
-            elif event2 in (None,"Quit"):
-                if(sg.PopupYesNo('Would you like to quit?')=='Yes'):
-                    quit()
-                        
-                    
-        except TypeError:
-            pass'''
-                
-            
-            
-
     layout2 = [[sg.Text('The values')],
-                    [sg.InputText(Return_offset_value(root_folder+char_table[index].seq_path,char_table[index].health_offset))],
-                    [sg.InputText(Return_offset_value(root_folder+char_table[index].seq_path,char_table[index].guard_offset))]
+               [sg.InputText(Return_offset_value(root_folder+char_table[index].seq_path,char_table[index].health_offset))],
+               [sg.InputText(Return_offset_value(root_folder+char_table[index].seq_path,char_table[index].guard_offset))]
+              ]
 
-                    ]
-
-    layout1 = [  [sg.Text('Ah yes, it\'s all coming together')],
-                    [sg.Text(char_table[index].name+'\'s health value')],
-                    [sg.Text(char_table[index].name+'\'s guard value')],
-                    [sg.Button('Change It!'), sg.Button('Go Back')] ]
-    print(char_table[index].name,char_table[index].seq_path,char_table[index].health_offset,Return_offset_value(root_folder+char_table[index].seq_path,char_table[index].health_offset))
+    layout1 = [[sg.Text(random.choice(quips))],
+               [sg.Text(char_table[index].name+'\'s health value')],
+               [sg.Text(char_table[index].name+'\'s guard value')],
+               [sg.Button('Change It!'), sg.Button('Go Back')] ]
+    #yay for debugging statements, don't remove this unless you wanna type it again, which I don't
+    #print(char_table[index].name,char_table[index].seq_path,char_table[index].health_offset,Return_offset_value(root_folder+char_table[index].seq_path,char_table[index].health_offset))
 
 
                     
     layout = [[sg.Column(layout1),sg.Column(layout2,element_justification = 'right')]]
 
         # Create the Window
-    window = sg.Window('Naruto health editor', layout)
+    window = sg.Window('SEQ Kage', layout)
         # Event Loop to process "events" and get the "values" of the inputs
-
-    while True:
-        event, values = window.read()
-        if event in (None, 'Go Back'):        # if user closes window or clicks cancel
-            if(sg.PopupYesNo('Would you like to go back?')=='Yes'):
-                window.close()
-                break
-                
-                
-        else:  
-            try:
-                int(values[0])
-                int(values[0])
-                Edit_file(root_folder+char_table[index].seq_path,char_table[index].health_offset,int(values[0]))
-                Edit_file(root_folder+char_table[index].seq_path,char_table[index].guard_offset,int(values[1]))
-                window.close()
-                break
-                    
-                        
-            except ValueError:
-                print('wrong type dummy')
-                sg.Popup("you didn't just type numbers you silly goose")
+    
+    Editor(window,index)
+    
                 
                 
                 
