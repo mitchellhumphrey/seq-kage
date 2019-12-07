@@ -7,15 +7,20 @@ import random
 quips = ["Ahh yes, it's all coming together","Everything's coming up Millhouse"]
 
 
+
+
 def Editor(window,index):
     while True:
+        
         event, values = window.read()
         if event in (None, 'Go Back'):        # if user closes window or clicks cancel
-            if(sg.PopupYesNo('Would you like to go back?')=='Yes'):
-                window.close()
-                return
-                
-                
+            window.close()
+            return
+        
+        elif event in(None,'Access Specific Offset'):
+            window.Close()
+            Random_Access(root_folder+char_table[index].seq_path)
+            event, values = window.read()
         else:  
             try:
                 int(values[0])
@@ -29,10 +34,15 @@ def Editor(window,index):
             except ValueError:
                 sg.Popup("you didn't just type numbers you silly goose")
 
+
+char_sel_window_shown = True
+
 def Char_Index_select(list_of_chars,window):
+    global char_sel_window_shown
     counter = 0
     while True:
-        
+        if char_sel_window_shown == False:
+            window.UnHide()
         event, values = window.read()
         try:
             if event in (None,'Select'):
@@ -47,7 +57,8 @@ def Char_Index_select(list_of_chars,window):
                     
                     if(values[x]==True):
                         index = x
-                        #window.close()
+                        window.Hide()
+                        char_sel_window_shown = False
                         return index
                         
                              
@@ -62,16 +73,17 @@ def Char_Index_select(list_of_chars,window):
                 
 
 
-def Edit_file(filepath,offset,value):
+
+def Edit_file(filepath,offset,value,num_of_bytes = 4):
     "offset is hex value<--------------------"
-    "value MUST be an integer that is 4 bytes or less"
+    "value MUST be an integer that is num_of_bytes bytes or less"
     original_file = open(filepath,'rb')
     temp_file = open(filepath+'temp','wb+')
     
     temp_file.write(original_file.read(int(offset,16)))
     
-    temp_file.write(value.to_bytes(4,'big'))
-    original_file.read(4)
+    temp_file.write(value.to_bytes(num_of_bytes,'big'))
+    original_file.read(num_of_bytes)
     temp_file.write(original_file.read())
     temp_file.close()
     original_file.close()
@@ -80,15 +92,67 @@ def Edit_file(filepath,offset,value):
 
 
 
-def Return_offset_value(filepath,offset):
+def Return_offset_value(filepath,offset,length = 4):
     "offset is hex value<--------------------"
     original_file = open(filepath,'rb')
     
     original_file.read(int(offset,16))    
-    value = int.from_bytes(original_file.read(4),'big')
+    value = int.from_bytes(original_file.read(length),'big')
     original_file.close()
     return value
 
+
+def Random_Access(filepath):
+
+    text =  [[sg.Text('What offset do you wish to access?(in hex)')],
+               [sg.Text('How many bytes would you like to see?')],
+               [sg.Button('Enter'),sg.Button('Go Back')]
+    ]
+    input = [[sg.InputText()],
+             [sg.InputText()]]
+
+    layout = [[sg.Column(text),sg.Column(input)]]
+    window = sg.Window('test',layout)
+    while True:
+        event,values = window.read()
+        if event in (None, 'Go Back'):        # if user closes window or clicks cancel
+            window.close()
+            return
+               
+        if event in ('None','Enter'):
+            try:
+                int(values[0],16)
+                
+                offset = values[0]
+                access_length = int(values[1])
+                value = Return_offset_value(filepath,offset,access_length)
+                layout2 = [[sg.Text('What would you like the value of offset ',str(offset),' and access length ',str(access_length),' to be?')],[sg.InputText(str(value))]]
+                window2 = sg.Window('test2',layout2)
+                window.Hide()
+                while True:
+                    #switched to popups here cause interpeter was throwing a fit and googling didn't help
+                    try:
+                        temp_value = sg.PopupGetText('enter your value as a decimal integer',default_text = str(value))
+                        print(temp_value)
+                        if(temp_value ==None):
+                            window.UnHide()
+                            window.close()
+                            return
+                        
+                        int(temp_value)
+                        Edit_file(filepath,offset,int(temp_value),access_length)
+                        window.UnHide()
+                        window.close()
+                        return
+                        
+                    except TypeError:
+                        sg.Popup("That's not decimal")
+                        
+                    
+                
+            except TypeError:
+                sg.Popup("Those aren't valid inputs")
+    
 
 
 
@@ -126,7 +190,7 @@ window_radio = sg.Window('Character Select',radio_layout)
 
 #==============================main program loop============================================================
 break_flag = False
-
+print('aaaaaa')
 
 
 while True:
@@ -141,7 +205,7 @@ while True:
     layout1 = [[sg.Text(random.choice(quips))],
                [sg.Text(char_table[index].name+'\'s health value')],
                [sg.Text(char_table[index].name+'\'s guard value')],
-               [sg.Button('Change It!'), sg.Button('Go Back')] ]
+               [sg.Button('Change It!'), sg.Button('Go Back'),sg.Button('Access Specific Offset')] ]
     #yay for debugging statements, don't remove this unless you wanna type it again, which I don't
     #print(char_table[index].name,char_table[index].seq_path,char_table[index].health_offset,Return_offset_value(root_folder+char_table[index].seq_path,char_table[index].health_offset))
 
@@ -149,10 +213,9 @@ while True:
                     
     layout = [[sg.Column(layout1),sg.Column(layout2,element_justification = 'right')]]
 
-        # Create the Window
+        
     window = sg.Window('SEQ Kage', layout)
-        # Event Loop to process "events" and get the "values" of the inputs
-    
+        
     Editor(window,index)
     
                 
