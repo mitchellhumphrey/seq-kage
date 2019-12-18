@@ -1,4 +1,4 @@
-#SEQ KAGE
+# SEQ KAGE
 
 source code requires PYSimpleGUI
 
