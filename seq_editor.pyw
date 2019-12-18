@@ -7,6 +7,199 @@ import random
 quips = ["Ahh yes, it's all coming together","Everything's coming up Millhouse"]
 
 
+def Flag_Edit(filepath):
+    num_of_bytes = 40
+    #print(data)
+    while True:
+        try:
+            offset = sg.PopupGetText("Please put in hex")
+            int(offset,16)
+            break
+        except ValueError:
+            sg.Popup("Not a valid offset")
+    data = hex(Return_offset_value(filepath,offset,num_of_bytes))
+    data = data[2:] #removes the 0x in front of data so you can work with it
+    
+    
+    #splits up data into the flag sections
+    index = -1
+    buffer = 0
+    split_data = []
+    for elem in data:
+        if buffer % 16 == 0:
+            buffer = 0
+            index += 1
+            split_data.append('')
+        split_data[index]+=(elem)
+        buffer += 1
+    print(split_data)
+    
+    for x in range(len(split_data)):
+        if split_data[x][:8].upper()=='241A0000':
+            print('AF Flags: Action state flags')
+            print(split_data[x][8:])
+            bytes = []
+            for i in range(len(split_data[x][8:])):
+                bytes.append(split_data[x][8:][i])
+            print(bytes)
+            
+            
+            AF_flags = []
+            for z in range(32):
+                AF_flags.append(False)
+            
+            #============================ assigning if boxes should be checked ===============================
+            for n in range(len(bytes)):
+                temp = int(bytes[n],16)
+                print(temp)
+                if temp >= 8:
+                    AF_flags[31-(4*n)]=True
+                    temp-=8
+                if temp >= 4:
+                    AF_flags[30-(4*n)]=True
+                    temp-=4
+                if temp >= 2:
+                    AF_flags[29-(4*n)]=True
+                    temp-=2
+                if temp>=1:
+                    AF_flags[28-(4*n)]=True
+                    temp-=1
+            
+        
+            
+            layout = [[sg.Text('What AF flags do you want on this move? (Action state flags)')],
+                      [sg.Checkbox('stand',default = AF_flags[0]),sg.Checkbox('forward',default = AF_flags[1]),sg.Checkbox('back',default = AF_flags[2]),sg.Checkbox('dash',default = AF_flags[3]),sg.Checkbox('sit',default = AF_flags[4]),sg.Checkbox('fuse',default = AF_flags[5]),sg.Checkbox('ukemi',default = AF_flags[6]),sg.Checkbox('kiri',default = AF_flags[7])],
+                      [sg.Checkbox('spmdmg',default = AF_flags[8]),sg.Checkbox('slant',default = AF_flags[9]),sg.Checkbox('quick',default = AF_flags[10]),sg.Checkbox('float',default = AF_flags[11]),sg.Checkbox('jump',default = AF_flags[12]),sg.Checkbox('fall',default = AF_flags[13]),sg.Checkbox('small',default = AF_flags[14]),sg.Checkbox('damage',default = AF_flags[15])],
+                      [sg.Checkbox('downu',default = AF_flags[16]),sg.Checkbox('downo',default = AF_flags[17]),sg.Checkbox('getup',default = AF_flags[18]),sg.Checkbox('turn',default = AF_flags[19]),sg.Checkbox('tdown',default = AF_flags[20]),sg.Checkbox('cantact',default = AF_flags[21]),sg.Checkbox('sdef',default = AF_flags[22]),sg.Checkbox('bdef',default = AF_flags[23])],
+                      [sg.Checkbox('beast',default = AF_flags[24]),sg.Checkbox('uki',default = AF_flags[25]),sg.Checkbox('butt',default = AF_flags[26]),sg.Checkbox('ndown',default = AF_flags[27]),sg.Checkbox('def',default = AF_flags[28]),sg.Checkbox('tfail',default = AF_flags[29]),sg.Checkbox('throw',default = AF_flags[30]),sg.Checkbox('attack',default = AF_flags[31])],
+                      [sg.Button('Done')]]
+            window = sg.Window('AF Flags', layout)
+            while True:
+                event, values = window.read()
+                if event in (None,'Done'):
+                    for n in range(len(values)):
+                        AF_flags[n] = values[n]
+                    finished_bytes = []
+                    for n in range(8):
+                        temp = 0
+                        if AF_flags[0+(4*n)]==True:
+                            temp += 1
+                        if AF_flags[1+(4*n)]==True:
+                            temp += 2
+                        if AF_flags[2+(4*n)]==True:
+                            temp += 4
+                        if AF_flags[3+(4*n)]==True:
+                            temp += 8
+                        temp = hex(temp)[2:]
+                        finished_bytes.insert(0,temp)
+                    print(finished_bytes)
+                    AF_finished = ''.join(finished_bytes)
+                    print(AF_finished)
+                    split_data[x] = '241a0000'+AF_finished
+                    print(split_data)
+                    window.close()
+                    break
+            
+            
+            
+            
+        if split_data[x][:8].upper()=='241A0900':
+            print('NF Flags')
+            print(split_data[x][8:])
+            bytes = []
+            for i in range(len(split_data[x][8:])):
+                bytes.append(split_data[x][8:][i])
+            print(bytes)
+            
+            NF_flags = []
+            for z in range(32):
+                NF_flags.append(False)
+            #============================ assigning if boxes should be checked ===============================
+            for n in range(len(bytes)):
+                temp = int(bytes[n],16)
+                print(temp)
+                if temp >= 8:
+                    NF_flags[31-(4*n)]=True
+                    temp-=8
+                if temp >= 4:
+                    NF_flags[30-(4*n)]=True
+                    temp-=4
+                if temp >= 2:
+                    NF_flags[29-(4*n)]=True
+                    temp-=2
+                if temp>=1:
+                    NF_flags[28-(4*n)]=True
+                    temp-=1
+            
+            layout = [[sg.Text("What NF flags do you want")],
+                      [sg.Checkbox('kamae',default = NF_flags[0]),sg.Checkbox('disp',default = NF_flags[1]),sg.Checkbox('tdmg',default = NF_flags[2]),sg.Checkbox('jump2',default = NF_flags[3]),sg.Checkbox('leverdir',default = NF_flags[4]),sg.Checkbox('getup',default = NF_flags[5]),sg.Checkbox('hiteft',default = NF_flags[6]),sg.Checkbox('nfog',default = NF_flags[7])],
+                      [sg.Checkbox('takeon',default = NF_flags[8]),sg.Checkbox('(blank)',default = NF_flags[9]),sg.Checkbox('bdrivesleep',default = NF_flags[10]),sg.Checkbox('jump',default = NF_flags[11]),sg.Checkbox('fall',default = NF_flags[12]),sg.Checkbox('jspd',default = NF_flags[13]),sg.Checkbox('shotdef',default = NF_flags[14]),sg.Checkbox('move',default = NF_flags[15])],
+                      [sg.Checkbox('attack',default = NF_flags[16]),sg.Checkbox('button',default = NF_flags[17]),sg.Checkbox('combo',default = NF_flags[18]),sg.Checkbox('disp_n',default = NF_flags[19]),sg.Checkbox('kabehit',default = NF_flags[20]),sg.Checkbox('bodytouch',default = NF_flags[21]),sg.Checkbox('aguard',default = NF_flags[22]),sg.Checkbox('damage',default = NF_flags[23])],
+                      [sg.Checkbox('guard',default = NF_flags[24]),sg.Checkbox('autodir',default = NF_flags[25]),sg.Checkbox('eneauto',default = NF_flags[26]),sg.Checkbox('njpturn',default = NF_flags[27]),sg.Checkbox('ringout',default = NF_flags[28]),sg.Checkbox('kabe',default = NF_flags[29]),sg.Checkbox('tdown',default = NF_flags[30]),sg.Checkbox('lever',default = NF_flags[31])],
+                      [sg.Button('Done')]]
+            
+            
+            
+            
+            
+            window = sg.Window('NF Flags', layout)
+            while True:
+                event, values = window.read()
+                if event in (None,'Done'):
+                    for n in range(len(values)):
+                        NF_flags[n] = values[n]
+                    finished_bytes = []
+                    for n in range(8):
+                        temp = 0
+                        if NF_flags[0+(4*n)]==True:
+                            temp += 1
+                        if NF_flags[1+(4*n)]==True:
+                            temp += 2
+                        if NF_flags[2+(4*n)]==True:
+                            temp += 4
+                        if NF_flags[3+(4*n)]==True:
+                            temp += 8
+                        temp = hex(temp)[2:]
+                        finished_bytes.insert(0,temp)
+                    print(finished_bytes)
+                    NF_finished = ''.join(finished_bytes)
+                    print(NF_finished)
+                    split_data[x] = '241a0900'+NF_finished
+                    print(split_data)
+                    window.close()
+                    break
+            
+            
+            
+            
+            
+            
+        if split_data[x][:8].upper()=='241A1200' or split_data[x][:8].upper()=='48040000':
+            print('KF Flags')
+            print(split_data[x][8:])
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        if split_data[x][:8].upper()=='241A2D00':
+            print('RF Flags')
+            print(split_data[x][8:])
+        if split_data[x][:8].upper()=='241A4800':
+            print('K2F Flags')
+            print(split_data[x][8:])
+        if split_data[x][:8].upper()=='241A5700':
+            print('N2F Flags')
+            print(split_data[x][8:])
+        finished = ''.join(split_data)
+        valuezzzz = int(finished,16)
+        Edit_file(filepath,offset,valuezzzz,num_of_bytes)
 
 
 def Editor(window,index):
@@ -16,7 +209,10 @@ def Editor(window,index):
         if event in (None, 'Go Back'):        # if user closes window or clicks cancel
             window.close()
             return
-        
+        elif event in(None,"Flag Edit"):
+            window.Close()
+            Flag_Edit(root_folder+char_table[index].seq_path)
+            event, values = window.read()
         elif event in(None,'Access Specific Offset'):
             window.Close()
             Random_Access(root_folder+char_table[index].seq_path)
@@ -125,28 +321,29 @@ def Random_Access(filepath):
                 
                 offset = values[0]
                 access_length = int(values[1])
-                value = Return_offset_value(filepath,offset,access_length)
+                value = hex(Return_offset_value(filepath,offset,access_length))
+                value = value[2:]
                 layout2 = [[sg.Text('What would you like the value of offset ',str(offset),' and access length ',str(access_length),' to be?')],[sg.InputText(str(value))]]
                 window2 = sg.Window('test2',layout2)
                 window.Hide()
                 while True:
                     #switched to popups here cause interpeter was throwing a fit and googling didn't help
                     try:
-                        temp_value = sg.PopupGetText('enter your value as a decimal integer',default_text = str(value))
+                        temp_value = sg.PopupGetText('enter your value as a hexadecimal integer',default_text = str(value))
                         print(temp_value)
                         if(temp_value ==None):
                             window.UnHide()
                             window.close()
                             return
                         
-                        int(temp_value)
-                        Edit_file(filepath,offset,int(temp_value),access_length)
+                        int(temp_value,16)
+                        Edit_file(filepath,offset,int(temp_value,16),access_length)
                         window.UnHide()
                         window.close()
                         return
                         
                     except TypeError:
-                        sg.Popup("That's not decimal")
+                        sg.Popup("That's not hexadecimal")
                         
                     
                 
@@ -205,7 +402,7 @@ while True:
     layout1 = [[sg.Text(random.choice(quips))],
                [sg.Text(char_table[index].name+'\'s health value')],
                [sg.Text(char_table[index].name+'\'s guard value')],
-               [sg.Button('Change It!'), sg.Button('Go Back'),sg.Button('Access Specific Offset')] ]
+               [sg.Button('Change It!'), sg.Button('Go Back'),sg.Button('Access Specific Offset'),sg.Button('Flag Edit')] ]
     #yay for debugging statements, don't remove this unless you wanna type it again, which I don't
     #print(char_table[index].name,char_table[index].seq_path,char_table[index].health_offset,Return_offset_value(root_folder+char_table[index].seq_path,char_table[index].health_offset))
 
