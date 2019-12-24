@@ -8,7 +8,7 @@ quips = ["Ahh yes, it's all coming together","Everything's coming up Millhouse"]
 
 
 def Flag_Edit(filepath):
-    num_of_bytes = 40
+    num_of_bytes = 56
     #print(data)
     while True:
         try:
@@ -17,6 +17,8 @@ def Flag_Edit(filepath):
             break
         except ValueError:
             sg.Popup("Not a valid offset")
+    print(filepath)
+    print(offset)
     data = hex(Return_offset_value(filepath,offset,num_of_bytes))
     data = data[2:] #removes the 0x in front of data so you can work with it
     
@@ -68,7 +70,7 @@ def Flag_Edit(filepath):
         
             
             layout = [[sg.Text('What AF flags do you want on this move? (Action state flags)')],
-                      [sg.Checkbox('stand',default = AF_flags[0]),sg.Checkbox('forward',default = AF_flags[1]),sg.Checkbox('back',default = AF_flags[2]),sg.Checkbox('dash',default = AF_flags[3]),sg.Checkbox('sit',default = AF_flags[4]),sg.Checkbox('fuse',default = AF_flags[5]),sg.Checkbox('ukemi',default = AF_flags[6]),sg.Checkbox('kiri',default = AF_flags[7])],
+                      [sg.Checkbox('stand',default = AF_flags[0],tooltip='its a motherfucking test you biatch'),sg.Checkbox('forward',default = AF_flags[1]),sg.Checkbox('back',default = AF_flags[2]),sg.Checkbox('dash',default = AF_flags[3]),sg.Checkbox('sit',default = AF_flags[4]),sg.Checkbox('fuse',default = AF_flags[5]),sg.Checkbox('ukemi',default = AF_flags[6]),sg.Checkbox('kiri',default = AF_flags[7])],
                       [sg.Checkbox('spmdmg',default = AF_flags[8]),sg.Checkbox('slant',default = AF_flags[9]),sg.Checkbox('quick',default = AF_flags[10]),sg.Checkbox('float',default = AF_flags[11]),sg.Checkbox('jump',default = AF_flags[12]),sg.Checkbox('fall',default = AF_flags[13]),sg.Checkbox('small',default = AF_flags[14]),sg.Checkbox('damage',default = AF_flags[15])],
                       [sg.Checkbox('downu',default = AF_flags[16]),sg.Checkbox('downo',default = AF_flags[17]),sg.Checkbox('getup',default = AF_flags[18]),sg.Checkbox('turn',default = AF_flags[19]),sg.Checkbox('tdown',default = AF_flags[20]),sg.Checkbox('cantact',default = AF_flags[21]),sg.Checkbox('sdef',default = AF_flags[22]),sg.Checkbox('bdef',default = AF_flags[23])],
                       [sg.Checkbox('beast',default = AF_flags[24]),sg.Checkbox('uki',default = AF_flags[25]),sg.Checkbox('butt',default = AF_flags[26]),sg.Checkbox('ndown',default = AF_flags[27]),sg.Checkbox('def',default = AF_flags[28]),sg.Checkbox('tfail',default = AF_flags[29]),sg.Checkbox('throw',default = AF_flags[30]),sg.Checkbox('attack',default = AF_flags[31])],
@@ -178,7 +180,68 @@ def Flag_Edit(filepath):
             print('KF Flags')
             print(split_data[x][8:])
             
+            bytes = []
+            for i in range(len(split_data[x][8:])):
+                bytes.append(split_data[x][8:][i])
+            print(bytes)
             
+            KF_flags = []
+            for z in range(32):
+                KF_flags.append(False)
+            #============================ assigning if boxes should be checked ===============================
+            for n in range(len(bytes)):
+                temp = int(bytes[n],16)
+                print(temp)
+                if temp >= 8:
+                    KF_flags[31-(4*n)]=True
+                    temp-=8
+                if temp >= 4:
+                    KF_flags[30-(4*n)]=True
+                    temp-=4
+                if temp >= 2:
+                    KF_flags[29-(4*n)]=True
+                    temp-=2
+                if temp>=1:
+                    KF_flags[28-(4*n)]=True
+                    temp-=1
+            
+            layout = [[sg.Text("What KF flags do you want")],
+                      [sg.Checkbox('replay:No Effect',default = KF_flags[0]),sg.Checkbox('BDrive: Changes lighting, no sub or tech roll',default = KF_flags[1]),sg.Checkbox('Shot: ??',default = KF_flags[2]),sg.Checkbox('Pow_W: weak hit. affects blockstun and hitstun',default = KF_flags[3]),sg.Checkbox('Pow_M: medium hit',default = KF_flags[4]),sg.Checkbox('Pow_S: strong hit',default = KF_flags[5]),sg.Checkbox('Low: attack hits low, and can be evaded by float flag',default = KF_flags[6]),sg.Checkbox('Middle: attack hits middle',default = KF_flags[7])],
+                      [sg.Checkbox('High: attack hits high, and can be evaded by sit flag',default = KF_flags[8]),sg.Checkbox('Punch: attack is classified as a punch',default = KF_flags[9]),sg.Checkbox('Kick: attack is classified as a kick',default = KF_flags[10]),sg.Checkbox('Throw: attack is classified as a throw',default = KF_flags[11]),sg.Checkbox('Oiuchi: Hits later on OTG',default = KF_flags[12]),sg.Checkbox('Special: Builds no chakra',default = KF_flags[13]),sg.Checkbox('NoGuard: Unblockable',default = KF_flags[14]),sg.Checkbox('TDown: ??',default = KF_flags[15])],
+                      [sg.Checkbox('SPTata: This is a large bounce',default = KF_flags[16]),sg.Checkbox('Break',default = KF_flags[17]),sg.Checkbox('Combo',default = KF_flags[18]),sg.Checkbox('Down',default = KF_flags[19]),sg.Checkbox('Yoro',default = KF_flags[20]),sg.Checkbox('Butt',default = KF_flags[21]),sg.Checkbox('Uki',default = KF_flags[22]),sg.Checkbox('Furi',default = KF_flags[23])],
+                      [sg.Checkbox('Koro',default = KF_flags[24]),sg.Checkbox('Reach_L',default = KF_flags[25]),sg.Checkbox('Tata',default = KF_flags[26]),sg.Checkbox('NoSpeEp',default = KF_flags[27]),sg.Checkbox('Beast',default = KF_flags[28]),sg.Checkbox('Freeze',default = KF_flags[29]),sg.Checkbox('Cancel',default = KF_flags[30]),sg.Checkbox('AtkCan',default = KF_flags[31])],
+                      [sg.Button('Done')]]
+            
+            
+            
+            
+            
+            window = sg.Window('KF Flags', layout)
+            while True:
+                event, values = window.read()
+                if event in (None,'Done'):
+                    for n in range(len(values)):
+                        KF_flags[n] = values[n]
+                    finished_bytes = []
+                    for n in range(8):
+                        temp = 0
+                        if KF_flags[0+(4*n)]==True:
+                            temp += 1
+                        if KF_flags[1+(4*n)]==True:
+                            temp += 2
+                        if KF_flags[2+(4*n)]==True:
+                            temp += 4
+                        if KF_flags[3+(4*n)]==True:
+                            temp += 8
+                        temp = hex(temp)[2:]
+                        finished_bytes.insert(0,temp)
+                    print(finished_bytes)
+                    KF_finished = ''.join(finished_bytes)
+                    print(KF_finished)
+                    split_data[x] = '241a1200'+KF_finished
+                    print(split_data)
+                    window.close()
+                    break
             
             
             
@@ -191,6 +254,71 @@ def Flag_Edit(filepath):
         if split_data[x][:8].upper()=='241A2D00':
             print('RF Flags')
             print(split_data[x][8:])
+            
+            bytes = []
+            for i in range(len(split_data[x][8:])):
+                bytes.append(split_data[x][8:][i])
+            print(bytes)
+            
+            RF_flags = []
+            for z in range(32):
+                RF_flags.append(False)
+            #============================ assigning if boxes should be checked ===============================
+            for n in range(len(bytes)):
+                temp = int(bytes[n],16)
+                print(temp)
+                if temp >= 8:
+                    RF_flags[31-(4*n)]=True
+                    temp-=8
+                if temp >= 4:
+                    RF_flags[30-(4*n)]=True
+                    temp-=4
+                if temp >= 2:
+                    RF_flags[29-(4*n)]=True
+                    temp-=2
+                if temp>=1:
+                    RF_flags[28-(4*n)]=True
+                    temp-=1
+            
+            layout = [[sg.Text("What RF flags do you want")],
+                      [sg.Checkbox('Color',default = RF_flags[0]),sg.Checkbox('Tyakurasub',default = RF_flags[1]),sg.Checkbox('Haziki',default = RF_flags[2]),sg.Checkbox('HazikiR',default = RF_flags[3]),sg.Checkbox('All Guard',default = RF_flags[4]),sg.Checkbox('Eftrev',default = RF_flags[5]),sg.Checkbox('TargetDira',default = RF_flags[6]),sg.Checkbox('GCancelChk',default = RF_flags[7])],
+                      [sg.Checkbox('GCancelOk',default = RF_flags[8]),sg.Checkbox('GCancel',default = RF_flags[9]),sg.Checkbox('GaAttack',default = RF_flags[10]),sg.Checkbox('NKawarimi',default = RF_flags[11]),sg.Checkbox('AutoMotion',default = RF_flags[12]),sg.Checkbox('Event00',default = RF_flags[13]),sg.Checkbox('ShadowOff',default = RF_flags[14]),sg.Checkbox('NoBack',default = RF_flags[15])],
+                      [sg.Checkbox('Intrude',default = RF_flags[16])],
+                      [sg.Button('Done')]]
+            
+            
+            
+            
+            
+            window = sg.Window('RF Flags', layout)
+            while True:
+                event, values = window.read()
+                if event in (None,'Done'):
+                    for n in range(len(values)):
+                        RF_flags[n] = values[n]
+                    finished_bytes = []
+                    for n in range(8):
+                        temp = 0
+                        if RF_flags[0+(4*n)]==True:
+                            temp += 1
+                        if RF_flags[1+(4*n)]==True:
+                            temp += 2
+                        if RF_flags[2+(4*n)]==True:
+                            temp += 4
+                        if RF_flags[3+(4*n)]==True:
+                            temp += 8
+                        temp = hex(temp)[2:]
+                        finished_bytes.insert(0,temp)
+                    print(finished_bytes)
+                    RF_finished = ''.join(finished_bytes)
+                    print(RF_finished)
+                    split_data[x] = '241a2d00'+RF_finished
+                    print(split_data)
+                    window.close()
+                    break
+            
+            
+            
         if split_data[x][:8].upper()=='241A4800':
             print('K2F Flags')
             print(split_data[x][8:])
