@@ -47,7 +47,7 @@ Character(seq('sko'),"2650C","26510","Sakon"),
 Character(seq('tay'),"28520","28524","Tayuya"),
 Character(seq('tem'),"2A158","2A15C","Temari"),
 Character(seq('ten'),"2B788","2B78C","Tenten"),
-Character(seq('tsu'),"25B80","35B84","Tsunade"),
+Character(seq('tsu'),"25B80","25B84","Tsunade"),
 Character(seq('zab'),"234B0","234B4","Zabuza")
 
 
