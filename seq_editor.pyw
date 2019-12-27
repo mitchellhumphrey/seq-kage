@@ -6,17 +6,59 @@ import random
 
 quips = ["Ahh yes, it's all coming together","Everything's coming up Millhouse"]
 
+def Edit_Action_IDs(filepath):
+    
+    layout = [[sg.Button('8B'),sg.Button('6B'),sg.Button('5B'),sg.Button('4B'),sg.Button('2B')],
+              [sg.Button('8A'),sg.Button('6A'),sg.Button('5A'),sg.Button('4A'),sg.Button('2A')],
+              [sg.Button('Go Back')]
+              ]
+    window = sg.Window('Edit Action IDs', layout)
+    while True:
+        event, values = window.read()
+        if event in (None,'Go Back'):
+            window.close()
+            return
+        if event in (None,'8B'):
+            move_offset = Return_offset_value(filepath,'3B8')
+            window.close()
+            break
+    Flag_Edit(filepath,move_offset)
 
-def Flag_Edit(filepath):
+
+
+
+def Get_health_offset(filepath):
+    offset = 0
+    print(hex(Return_offset_value(filepath,'9730',8))[2:])
+    counter = 0
+    while True:
+        value = hex(Return_offset_value(filepath,hex(offset),8))[2:]
+        if offset % 10000 == 0 or counter == 9676:
+            print(offset)
+        #print(value)
+        if value == '30300020908023f': #header to pointer for character health
+            return Return_offset_value(filepath,offset+8,4)
+        else:
+            offset += 4
+            counter += 1
+
+
+def Flag_Edit(filepath, input_offset = 0):
     num_of_bytes = 56
     #print(data)
     while True:
+        if input_offset != 0:
+            break
         try:
             offset = sg.PopupGetText("Please put in hex")
             int(offset,16)
             break
         except ValueError:
             sg.Popup("Not a valid offset")
+    
+    if input_offset != 0:
+        offset = input_offset
+    
     print(filepath)
     print(offset)
     data = hex(Return_offset_value(filepath,offset,num_of_bytes))
@@ -484,6 +526,10 @@ def Editor(window,index):
             window.Close()
             Random_Access(root_folder+char_table[index].seq_path)
             event, values = window.read()
+        elif event in(None,'Edit predectected moves'):
+            window.Close()
+            Edit_Action_IDs(root_folder+char_table[index].seq_path)
+            event, values = window.read()
         else:  
             try:
                 int(values[0])
@@ -543,7 +589,12 @@ def Edit_file(filepath,offset,value,num_of_bytes = 4):
     original_file = open(filepath,'rb')
     temp_file = open(filepath+'temp','wb+')
     
-    temp_file.write(original_file.read(int(offset,16)))
+    try:
+        offset_value = int(offset,16)
+    except:
+        offset_value = offset
+    
+    temp_file.write(original_file.read(offset_value))
     
     temp_file.write(value.to_bytes(num_of_bytes,'big'))
     original_file.read(num_of_bytes)
@@ -558,8 +609,15 @@ def Edit_file(filepath,offset,value,num_of_bytes = 4):
 def Return_offset_value(filepath,offset,length = 4):
     "offset is hex value<--------------------"
     original_file = open(filepath,'rb')
+    try:
+        original_file.read(int(offset,16))    
+    except:
+        print('whoops')
     
-    original_file.read(int(offset,16))    
+        original_file.read(offset)
+    
+    
+    
     value = int.from_bytes(original_file.read(length),'big')
     original_file.close()
     return value
@@ -660,16 +718,17 @@ print('aaaaaa')
 while True:
     
     index = Char_Index_select(char_table,window_radio)
-                    
+    health_offset = Get_health_offset(root_folder+char_table[index].seq_path)  
+    print(hex(health_offset))    
     layout2 = [[sg.Text('The values')],
-               [sg.InputText(Return_offset_value(root_folder+char_table[index].seq_path,char_table[index].health_offset))],
-               [sg.InputText(Return_offset_value(root_folder+char_table[index].seq_path,char_table[index].guard_offset))]
+               [sg.InputText(Return_offset_value(root_folder+char_table[index].seq_path,hex(health_offset)))],
+               [sg.InputText(Return_offset_value(root_folder+char_table[index].seq_path,hex(health_offset+4)))]
               ]
 
     layout1 = [[sg.Text(random.choice(quips))],
                [sg.Text(char_table[index].name+'\'s health value')],
                [sg.Text(char_table[index].name+'\'s guard value')],
-               [sg.Button('Change It!'), sg.Button('Go Back'),sg.Button('Access Specific Offset'),sg.Button('Flag Edit')] ]
+               [sg.Button('Change It!'), sg.Button('Go Back'),sg.Button('Access Specific Offset'),sg.Button('Flag Edit'),sg.Button('Edit predectected moves')] ]
     #yay for debugging statements, don't remove this unless you wanna type it again, which I don't
     #print(char_table[index].name,char_table[index].seq_path,char_table[index].health_offset,Return_offset_value(root_folder+char_table[index].seq_path,char_table[index].health_offset))
 
