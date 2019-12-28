@@ -13,14 +13,19 @@ def Edit_Action_IDs(filepath):
         '6B':0x2B4,
         '5B':0x2B0,
         '4B':0x2B8,
-        '2B':0x2BC}
+        '2B':0x2BC,
+        '8A':0x3BC,
+        '6A':0x2F4,
+        '5A':0x2F0,
+        '4A':0x2F8,
+        '2A':0x2FC}
     
     gen_layout = [[]]
     index,counter = 0,0
     for x in move_dict:
         gen_layout[index].append(sg.Button(x))
         counter += 1
-        if counter % 4 == 0:
+        if counter % 5 == 0:
             index += 1
             gen_layout.append([])
     gen_layout.append([sg.Button('Go Back')])
@@ -745,8 +750,7 @@ while True:
                [sg.Text(char_table[index].name+'\'s health value')],
                [sg.Text(char_table[index].name+'\'s guard value')],
                [sg.Button('Change It!'), sg.Button('Go Back'),sg.Button('Access Specific Offset'),sg.Button('Flag Edit'),sg.Button('Edit predectected moves')] ]
-    #yay for debugging statements, don't remove this unless you wanna type it again, which I don't
-    #print(char_table[index].name,char_table[index].seq_path,char_table[index].health_offset,Return_offset_value(root_folder+char_table[index].seq_path,char_table[index].health_offset))
+    
 
 
                     
