@@ -7,7 +7,7 @@ class Character:
         
         
 def seq(a):
-    return "//files//chr//"+a+"//0000.seq"
+    return "/files/chr/"+a+"/0000.seq"
 
 
 char_table = [

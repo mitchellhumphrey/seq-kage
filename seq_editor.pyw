@@ -8,20 +8,36 @@ quips = ["Ahh yes, it's all coming together","Everything's coming up Millhouse"]
 
 def Edit_Action_IDs(filepath):
     
-    layout = [[sg.Button('8B'),sg.Button('6B'),sg.Button('5B'),sg.Button('4B'),sg.Button('2B')],
-              [sg.Button('8A'),sg.Button('6A'),sg.Button('5A'),sg.Button('4A'),sg.Button('2A')],
-              [sg.Button('Go Back')]
-              ]
-    window = sg.Window('Edit Action IDs', layout)
+    move_dict = {
+        '8B':0x3B8,
+        '6B':0x2B4,
+        '5B':0x2B0,
+        '4B':0x2B8,
+        '2B':0x2BC}
+    
+    gen_layout = [[]]
+    index,counter = 0,0
+    for x in move_dict:
+        gen_layout[index].append(sg.Button(x))
+        counter += 1
+        if counter % 4 == 0:
+            index += 1
+            gen_layout.append([])
+    gen_layout.append([sg.Button('Go Back')])
+    
+    
+    window = sg.Window('Edit Action IDs', gen_layout)
+    
     while True:
         event, values = window.read()
         if event in (None,'Go Back'):
             window.close()
             return
-        if event in (None,'8B'):
-            move_offset = Return_offset_value(filepath,'3B8')
+        elif event in move_dict:
+            move_offset = Return_offset_value(filepath,move_dict[event])
             window.close()
             break
+        
     Flag_Edit(filepath,move_offset)
 
 
