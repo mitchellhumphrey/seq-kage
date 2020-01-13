@@ -3,8 +3,94 @@ import PySimpleGUI as sg
 import os
 import shutil
 import random
+import time
 
 quips = ["Ahh yes, it's all coming together","Everything's coming up Millhouse"]
+
+def Add_Space_At_End(filepath):
+    #only seems to work with itachi, so ¯\_(ツ)_/¯
+    add_bytes = sg.PopupGetText('How many bytes do you want to add?')
+    num_of_bytes = int(add_bytes,16)
+    start_of_insert = Return_offset_value(filepath,0x14)
+    end_of_insert = start_of_insert + num_of_bytes
+    original_file = open(filepath,'rb')
+    new_file = open(filepath+'temp','wb+')
+    new_file.write(original_file.read(start_of_insert))
+    value = 0xCC
+    for x in range(num_of_bytes):
+        new_file.write(value.to_bytes(1,'big'))
+    
+    
+    new_file.write(original_file.read())
+    new_file.close()
+    original_file.close()
+    os.remove(filepath)
+    shutil.move(filepath+'temp',filepath)
+    Pointer_fixer(filepath,start_of_insert,end_of_insert)
+
+
+def Pointer_fixer(filepath,start_of_insert,end_of_insert):
+    #start_of_insert is the offset where you started inserting new bytes: NEEDS TO BE AN INTEGER
+    #end_of_insert is the offset where your insert ended: NEEDS TO BE AN INTEGER
+    
+    difference = end_of_insert - start_of_insert
+    
+    last_function_offset = Return_offset_value(filepath,0x14)
+    
+    pointer_to_1000s = Return_offset_value(filepath,last_function_offset+0x04+difference)
+    original = Return_offset_value(filepath,pointer_to_1000s+0x30)
+    
+    
+    
+    Edit_file(filepath,pointer_to_1000s+0x30,original+difference)
+    
+    
+    file = open(filepath,'rb')
+    length_of_file = os.stat(filepath).st_size
+    
+    #sg.Popup('Pointers inside of the inserted WILL be changed, be warned :)')
+    
+    
+    new_file = open(filepath+'temp','wb+')
+    output = open('output'+str(time.time())+'.txt','wt')
+    last_value = 0
+    offset = -4
+    while True:
+        data = file.read(4)
+        offset += 4
+        if not data:
+            break
+        value = int.from_bytes(data,'big')
+        
+        if not int('0x241A0000',16)<= last_value <= int('0x241AFFFF',16):
+            if value in[int('0x01320000',16),int('0x01330000',16),int('0x01340000',16),int('0x013C0000',16)]:
+                new_file.write(value.to_bytes(4,'big'))
+                data = file.read(4)
+                offset += 4
+                value = int.from_bytes(data,'big')
+                if value > start_of_insert:
+                    print('changed value at ',hex(offset),' to ',hex(value),': byte before header was ',hex(last_value),file = output)
+                    value += difference
+                
+        
+        
+        new_file.write(value.to_bytes(4,'big'))
+        
+        last_value = value
+        
+
+
+
+
+    file.close()
+    new_file.close()
+    output.close()
+    os.remove(filepath)
+    shutil.move(filepath+'temp',filepath)
+    
+    
+    Edit_file(filepath,0x14,difference+last_function_offset)
+
 
 def Edit_Action_IDs(filepath):
     
@@ -551,6 +637,12 @@ def Editor(window,index):
             window.Close()
             Edit_Action_IDs(root_folder+char_table[index].seq_path)
             event, values = window.read()
+        elif event in(None,'Fix Pointers'):
+            window.Close()
+            #start = int(sg.PopupGetText('Put start of your insert here in hex'),16)
+            #end = int(sg.PopupGetText('Put end of your insert here in hex'),16)
+            Add_Space_At_End(root_folder+char_table[index].seq_path)
+            event, values = window.read()
         else:  
             try:
                 int(values[0])
@@ -607,7 +699,14 @@ def Char_Index_select(list_of_chars,window):
 def Edit_file(filepath,offset,value,num_of_bytes = 4):
     "offset is hex value<--------------------"
     "value MUST be an integer that is num_of_bytes bytes or less"
+    
+    with open('edits_in_files.txt','a') as f:
+        f.write("Changed offset "+hex(offset)+" to "+hex(value)+" in file "+filepath)
+        f.write('\n')
+    
+    
     original_file = open(filepath,'rb')
+    
     temp_file = open(filepath+'temp','wb+')
     
     try:
@@ -749,7 +848,8 @@ while True:
     layout1 = [[sg.Text(random.choice(quips))],
                [sg.Text(char_table[index].name+'\'s health value')],
                [sg.Text(char_table[index].name+'\'s guard value')],
-               [sg.Button('Change It!'), sg.Button('Go Back'),sg.Button('Access Specific Offset'),sg.Button('Flag Edit'),sg.Button('Edit predectected moves')] ]
+               [sg.Button('Change It!'), sg.Button('Go Back'),sg.Button('Access Specific Offset'),sg.Button('Flag Edit'),sg.Button('Edit predectected moves')],
+               [sg.Button('Fix Pointers')]]
     
 
 
