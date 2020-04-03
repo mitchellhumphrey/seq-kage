@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="44582873-7ae5-4fa2-8e59-e13fa30ee4ce" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/main/MoveData_class.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/custom_edit_function.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/display_function_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/SEQ_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/SEQ_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/find_functions.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/generic_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/generic_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +75,30 @@
       <option name="presentableId" value="Default" />
       <updated>1580241895793</updated>
     </task>
+    <task id="LOCAL-00001" summary="rewrite is done">
+      <created>1585887875218</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1585887875218</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="rewrite is done" />
+    <option name="LAST_COMMIT_MESSAGE" value="rewrite is done" />
   </component>
   <component name="WindowStateProjectService">
     <state x="552" y="179" key="#Inspections" timestamp="1580412164950">
@@ -98,29 +113,33 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="262" y="295" key="#xdebugger.XInspectDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1583217831535" />
+    <state x="614" y="115" key="CommitChangelistDialog2" timestamp="1585887873485">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="614" y="115" key="CommitChangelistDialog2/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1585887873485" />
     <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1583184808244">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1583184808244" />
-    <state width="1899" height="297" key="GridCell.Tab.0.bottom" timestamp="1585886707725">
+    <state width="1899" height="297" key="GridCell.Tab.0.bottom" timestamp="1585887877232">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="297" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1585886707725" />
+    <state width="1899" height="297" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1585887877232" />
     <state width="1899" height="297" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1583636810804" />
-    <state width="1899" height="297" key="GridCell.Tab.0.center" timestamp="1585886707725">
+    <state width="1899" height="297" key="GridCell.Tab.0.center" timestamp="1585887877232">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="297" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1585886707725" />
+    <state width="1899" height="297" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1585887877232" />
     <state width="1899" height="297" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1583636810803" />
-    <state width="1899" height="297" key="GridCell.Tab.0.left" timestamp="1585886707725">
+    <state width="1899" height="297" key="GridCell.Tab.0.left" timestamp="1585887877232">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="297" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1585886707725" />
+    <state width="1899" height="297" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1585887877232" />
     <state width="1899" height="297" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1583636810803" />
-    <state width="1899" height="297" key="GridCell.Tab.0.right" timestamp="1585886707725">
+    <state width="1899" height="297" key="GridCell.Tab.0.right" timestamp="1585887877232">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="297" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1585886707725" />
+    <state width="1899" height="297" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1585887877232" />
     <state width="1899" height="297" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1583636810803" />
     <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1583372112494">
       <screen x="0" y="0" width="1920" height="1040" />
