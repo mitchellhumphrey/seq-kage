@@ -16,3 +16,4 @@ def write_file_object(filepath, file_contents):
     """
     f = open(filepath, 'wb')
     f.write(file_contents)
+    print('wrote to file')
