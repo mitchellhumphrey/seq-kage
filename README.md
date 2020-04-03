@@ -1,4 +1,4 @@
-#SEQ Kage
+# SEQ Kage
 
 Welcome to SEQ Kage, the premier GNT4 SEQ editting tool (cause nothing else exists afaik)
 

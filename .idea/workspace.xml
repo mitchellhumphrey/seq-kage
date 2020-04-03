@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="44582873-7ae5-4fa2-8e59-e13fa30ee4ce" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="44582873-7ae5-4fa2-8e59-e13fa30ee4ce" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -82,7 +80,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585887875218</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="New README.md is done">
+      <created>1585888298068</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1585888298068</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -98,7 +103,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="rewrite is done" />
-    <option name="LAST_COMMIT_MESSAGE" value="rewrite is done" />
+    <MESSAGE value="New README.md is done" />
+    <option name="LAST_COMMIT_MESSAGE" value="New README.md is done" />
   </component>
   <component name="WindowStateProjectService">
     <state x="552" y="179" key="#Inspections" timestamp="1580412164950">
@@ -113,10 +119,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="262" y="295" key="#xdebugger.XInspectDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1583217831535" />
-    <state x="614" y="115" key="CommitChangelistDialog2" timestamp="1585887873485">
+    <state x="614" y="115" key="CommitChangelistDialog2" timestamp="1585888297473">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="614" y="115" key="CommitChangelistDialog2/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1585887873485" />
+    <state x="614" y="115" key="CommitChangelistDialog2/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1585888297473" />
     <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1583184808244">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
