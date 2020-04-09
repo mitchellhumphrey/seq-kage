@@ -76,7 +76,7 @@ class SEQObject:
             value = int.from_bytes(temp_data, 'big')
             last_value = int.from_bytes(last_data, 'big')
             if not 0x241A0000 <= last_value <= 0x241AFFFF:
-                if value in [i for i in range(0x01300000, 0x13FFFFF, 0x10000)]:  #
+                if value in [i for i in range(0x01300000, 0x013FFFFF, 0x10000)]:  #
                     index += 1
                     temp_data = self.data[index * 4:index * 4 + 4]
                     last_data = self.data[(index - 1) * 4:(index - 1) * 4 + 4]
@@ -138,6 +138,5 @@ class SEQObject:
         write_file_object(self.filepath, self.data)
 
     def write_action_id_table_to_obj(self):
-
         for x in range(608):
             self.data[0x30 + (4 * x):0x34 + (4 * x)] = self.action_id_table[x].to_bytes(4, 'big')

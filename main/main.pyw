@@ -1,23 +1,44 @@
-# import PySimpleGUI as sg
 from __init__ import *
-print('1')
-# sync_timer_edit(1,2)
-print('2')
-filepath = sg.PopupGetFile('put an SEQ file here', file_types=(("SEQ Files", "*.seq"),))
-SEQ = SEQObject(filepath)
-# SEQ.expand_seq_file(0x48)
-# SEQ.write_to_file()
-# SEQ.expand_seq_file(1000)
-start = int(sg.PopupGetText('Input the action state you want to edit in hex'), 16)
-print(SEQ.action_id_table[start])
-print(start)
-temp_data = build_MoveData(SEQ, start)
+import sys
 
-# print(test.action_id_table[start])
-# print(temp_list[end])
 
-window = build_MoveData_window(temp_data)
-display_MoveData_window(window, temp_data, SEQ)
+def main(default=''):
+    while True:
+        # this is the main function loop, more things will be added to this layout eventully
+        layout = [[sg.Text('Select the path to your SEQ')],
+                  [sg.Input(default), sg.FileBrowse(file_types=(("SEQ Files", "*.seq"),))],
+                  [sg.Text('Select your action ID you wish to Edit (In Hex)')],
+                  [sg.Input()],
+                  [sg.Button('Expand this SEQ'), sg.Spin(values=[i for i in range(1024)], initial_value=0)],
+                  [sg.Ok()]]
 
-# SEQ.expand_seq_file(0x1200)
-# SEQ.write_to_file()
+        window = sg.Window('SEQ Kage', layout=layout, font='Courier 12')
+
+        while True:
+            event, values = window.read()
+            default = values[0]
+            if event == 'Ok':
+                try:
+                    int(values[1], 16)
+                    window.close()
+                    SEQ = SEQObject(values[0])
+                    MoveData_obj = build_MoveData(SEQ, int(values[1], 16))
+
+                    window = build_MoveData_window(MoveData_obj)
+                    display_MoveData_window(window, MoveData_obj, SEQ)
+                    break
+                except ValueError:
+                    sg.Popup('Your Action ID is not in hex')
+            elif event == 'Expand this SEQ':
+                SEQ = SEQObject(values[0])
+                SEQ.expand_seq_file(values[2])
+                SEQ.write_to_file()
+            else:
+                return
+
+
+if __name__ == '__main__':
+    try:
+        main(sys.argv[1])
+    except IndexError:
+        main()

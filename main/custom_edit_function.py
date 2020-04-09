@@ -2,6 +2,35 @@ from __init__ import *
 import PySimpleGUI as sg
 
 
+def hitbox_edit(MoveData_obj,key):
+    bone = int.from_bytes(MoveData_obj.data[key[1] + 4:key[1] + 6], 'big')
+    size = int.from_bytes(MoveData_obj.data[key[1] + 6:key[1] + 8], 'big')
+    print(hex(bone), 'bone')
+    print(hex(size), 'size')
+    layout = [[sg.Text('What bone ID do you want to use?')],
+              [sg.InputText(hex(bone)[2:])],
+              [sg.Text('What size do you want this hitbox to be?')],
+              [sg.InputText(hex(size)[2:])],
+              [sg.Button('Save')]]
+    window_hitbox = sg.Window('Hitbox Edit', layout=layout, font='Courier 12')
+    while True:
+        event, values = window_hitbox.read()
+        if event in (None, 'Save'):
+            try:
+                int(values[0], 16)
+                int(values[1], 16)
+                break
+            except ValueError:
+                sg.Popup('Not in Hexadecimal')
+                pass
+    window_hitbox.close()
+    try:
+        MoveData_obj.data[key[1] + 4:key[1] + 6] = int(values[0], 16).to_bytes(2, 'big')
+        MoveData_obj.data[key[1] + 6:key[1] + 8] = int(values[1], 16).to_bytes(2, 'big')
+    except TypeError:
+        pass
+
+
 def animation_edit(MoveData_obj, key):
     gnta_file = int.from_bytes(MoveData_obj.data[key[1] + 4:key[1] + 8], 'big')
     layout = [[sg.Text('What animation ID do you want to use?')],

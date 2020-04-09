@@ -156,6 +156,7 @@ def display_MoveData_window(window, MoveData_Obj, SEQ_Object):
             window.close()
             line_movedata_window(MoveData_Obj, event)
             window = build_MoveData_window(MoveData_Obj)
+    window.close()
     return
 
 
@@ -184,6 +185,8 @@ def line_movedata_window(MoveData_Obj, key):
                 sync_timer_edit(MoveData_Obj, key)
             elif key[3] == 'Animation':
                 animation_edit(MoveData_Obj, key)
+            elif key[3] == 'Hitbox Location':
+                hitbox_edit(MoveData_Obj, key)
 
     return
 
