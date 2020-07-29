@@ -1,3 +1,5 @@
+import logging
+
 class MoveData:
     def __init__(self, input_data, action_id):
         self.starting_length = len(input_data)
@@ -67,6 +69,9 @@ class MoveData:
                 index += 2
             elif int.from_bytes(data[index * 4:(index * 4) + 4], 'big') == 0x241A0900:
                 self.NF_flag.append(index)
+                index += 2
+            elif int.from_bytes(data[index * 4:(index * 4) + 4], 'big') == 0x241A0700:
+                self.NF_flag_remove.append(index)
                 index += 2
             elif int.from_bytes(data[index * 4:(index * 4) + 4], 'big') == 0x241A1200:
                 self.KF_flag.append(index)
@@ -250,6 +255,8 @@ class MoveData:
 
         print('unknown words are', self.unused_offsets)
 
+    def __str__(self):
+        return "{0}".format(self.__dict__)
 
 def build_MoveData(an_seq_object, action_id):
     """
@@ -274,7 +281,7 @@ def build_MoveData(an_seq_object, action_id):
 
     #if CC_counter > 3:
        # return MoveData(an_seq_object.data_range(an_seq_object.action_id_table[action_id],
-        #                                         an_seq_object.action_id_table[action_id] + ((end - 4) * 4)), action_id)
+        #  an_seq_object.action_id_table[action_id] + ((end - 4) * 4)), action_id)
     print(an_seq_object.action_id_table[action_id] + ((end - 4) * 4))
     print(temp_list[end])
     return MoveData(an_seq_object.data_range(an_seq_object.action_id_table[action_id], temp_list[end]), action_id)

@@ -1,9 +1,28 @@
 from __init__ import *
 from custom_edit_function import *
 import PySimpleGUI as sg
+import logging
+import __init__
 
 
 def column_builder(offset_column, purpose_column, data_column, MoveData_obj, amount_of_words, purpose, index):
+    logging.info("starting column_builder()")
+    if __init__.debug:
+        logging.debug('offset_column')
+        logging.debug(offset_column)
+        logging.debug('purpose_column')
+        logging.debug(purpose_column)
+        logging.debug('data_column')
+        logging.debug(data_column)
+        logging.debug('MoveData_obj')
+        logging.debug(MoveData_obj)
+        logging.debug('amount_of_words')
+        logging.debug(amount_of_words)
+        logging.debug('purpose')
+        logging.debug(purpose)
+        logging.debug('index')
+        logging.debug(index)
+
     offset_column.append(
         [sg.Button('0x' + str(hex(index * 4))[2:].upper().rjust(5, '0'), pad=(0, 0), size=(9, 1),
                    key=('offset', index * 4, amount_of_words, purpose))])
@@ -14,9 +33,11 @@ def column_builder(offset_column, purpose_column, data_column, MoveData_obj, amo
             int.from_bytes(MoveData_obj.data[(index * 4) + (4 * i): (index * 4) + 4 * (i + 1)], 'big'))[
                               2:].rjust(8, '0') + ' '
     data_column.append([sg.Text(str_data.upper(), key=('data', index * 4, amount_of_words))])
+    logging.info("ending column_builder()")
 
 
 def build_MoveData_window(MoveData_obj):
+    logging.info("starting build_MoveData_window()")
     # column_data = [[sg.Column([[]], key='column1'), sg.Column([[]], key='column2'), sg.Column([[]], key='column3')]]
     # layout = [[sg.Button('Quit', key='Quit'), sg.Text('                      SEQ Kage')],
     # [sg.Column(column_data, scrollable=True, vertical_scroll_only=True, size=(950, 700), key='column')]]
@@ -24,11 +45,14 @@ def build_MoveData_window(MoveData_obj):
     # window.finalize()
 
     window = update_MoveData_window(MoveData_obj)
-
+    logging.info("ending build_MoveData_window()")
     return window
 
 
 def update_MoveData_window(MoveData_obj):
+    logging.info("starting update_MoveData_window")
+    if __init__.debug:
+        logging.debug(str(MoveData_obj))
     """
     :rtype: sg.Window
     """
@@ -39,6 +63,8 @@ def update_MoveData_window(MoveData_obj):
     column_data_data = [[sg.Text('Data')]]
     index = 0
     while MoveData_obj.word_length > index:
+        if __init__.debug:
+            logging.debug("index is {0}".format(index))
         if index in MoveData_obj.AF_flag:
             column_builder(column_data_offset, column_data_purpose, column_data_data, MoveData_obj, 2, 'AF Flag', index)
         elif index in MoveData_obj.NF_flag:
@@ -138,10 +164,19 @@ def update_MoveData_window(MoveData_obj):
     # window['column'].Update(column_data)
     # window.refresh()
     # print(MoveData_obj.data)
+    logging.info("ending update_MoveData_window")
     return window
 
 
 def display_MoveData_window(window, MoveData_Obj, SEQ_Object):
+    logging.info("starting dispaly_MoveData_Window()")
+    if __init__.debug:
+        logging.debug("window")
+        logging.debug(window)
+        logging.debug("MoveData_Obj")
+        logging.debug(str(MoveData_Obj))
+        logging.debug("SEQ_Object")
+        logging.debug(str(SEQ_Object))
     while True:
         event, values = window.read()
         print(event, 'event')
@@ -161,6 +196,9 @@ def display_MoveData_window(window, MoveData_Obj, SEQ_Object):
 
 
 def line_movedata_window(MoveData_Obj, key):
+    logging.info("starting line_movedata_window")
+    if __init__.debug:
+        logging.debug(str(MoveData_Obj))
     layout = [[sg.Text(
         'Would you like to Use custom editor for this line, insert before this line, delete, or edit this line?')],
         [sg.Radio('Custom Edit', group_id='radio'), sg.Radio('Insert', group_id='radio'),
@@ -187,12 +225,18 @@ def line_movedata_window(MoveData_Obj, key):
                 animation_edit(MoveData_Obj, key)
             elif key[3] == 'Hitbox Location':
                 hitbox_edit(MoveData_Obj, key)
-
+    logging.info("ending line_movedata_window")
     return
 
 
 def edit_line_movedata(MoveData_Obj, key):
-    print('in edit line movedata')
+    logging.info('starting edit_line_movedata()')
+    if __init__.debug:
+        logging.debug("MoveData_Obj")
+        logging.debug(str(MoveData_Obj))
+        logging.debug("key")
+        logging.debug(key)
+
     current_value = MoveData_Obj.data[key[1]:key[1] + (key[2] * 4)]
     layout = [[sg.Text('Edit the line in hex')],
               [sg.InputText(hex(int.from_bytes(current_value, byteorder='big'))[2:])],
@@ -207,6 +251,7 @@ def edit_line_movedata(MoveData_Obj, key):
             MoveData_Obj.data[key[1]:key[1] + (key[2] * 4)] = given_input.to_bytes(key[2] * 4, byteorder='big')
 
     window.close()
+    logging.info("ending edit_line_movedata()")
     return
 
 

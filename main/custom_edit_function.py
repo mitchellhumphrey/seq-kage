@@ -1,6 +1,6 @@
 from __init__ import *
 import PySimpleGUI as sg
-
+import logging
 
 def hitbox_edit(MoveData_obj,key):
     bone = int.from_bytes(MoveData_obj.data[key[1] + 4:key[1] + 6], 'big')
@@ -267,3 +267,6 @@ def n2f_layout(N2F_flags):
              sg.Checkbox('null', default=N2F_flags[12]), sg.Checkbox('null', default=N2F_flags[13]),
              sg.Checkbox('null', default=N2F_flags[14])],
             [sg.Button('Done')]]
+
+def ef_layout(EF_flags):
+    return

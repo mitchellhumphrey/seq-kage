@@ -1,6 +1,6 @@
 import os
 from __init__ import *
-
+import logging
 
 class SEQObject:
     def __init__(self, filepath):
@@ -11,9 +11,9 @@ class SEQObject:
         self.filesize = os.path.getsize(filepath)
         self.data = open_file_object(filepath)
         self.data = bytearray(self.data)
-        self.action_id_table = self.get_action_id_table()
+        '''self.action_id_table = self.get_action_id_table()
         self.health_offset = self.find_health_offset()
-        self.guard_offset = self.health_offset + 4
+        self.guard_offset = self.health_offset + 4'''
 
     def get_action_id_table(self):
         """
@@ -57,14 +57,12 @@ class SEQObject:
         # ported from original SEQ Kage
         self.data = bytearray(self.data)
         start_of_last_function = int.from_bytes(self.data[0x14:0x18], byteorder='big')
-        # self.data[0x14:0x18] = (int.from_bytes(self.data[0x14:0x18], 'big') + (expansion_length * 4)).to_bytes(4,byteorder='big')
         print(start_of_last_function, 'start of last function', hex(start_of_last_function))
         pointer_to_1000s = int.from_bytes(self.data[start_of_last_function + 4:start_of_last_function + 8], 'big')
         print(pointer_to_1000s, 'pointer to 1000s', hex(pointer_to_1000s))
         print('start = ')
         self.data[pointer_to_1000s + 0x30:pointer_to_1000s + 0x34] = (
-                int.from_bytes(self.data[pointer_to_1000s + 0x30:pointer_to_1000s + 0x34],
-                               'big') + expansion_length * 4).to_bytes(4, 'big')
+                int.from_bytes(self.data[pointer_to_1000s + 0x30:pointer_to_1000s + 0x34],'big') + int(expansion_length) * 4).to_bytes(4, 'big')
 
         index = 1
         while True:  # this loop fixes pointers, SEQ Expanision is next thing

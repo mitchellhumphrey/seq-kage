@@ -1,3 +1,5 @@
+import logging
+
 def open_file_object(filepath):
     """
     :param filepath: this is the filepath to the file you will be opening
